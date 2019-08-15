@@ -43,19 +43,19 @@ ricdf <- function(N, draw.set) {
     draw.set$xbin[match(pdraws,draw.set$pbin)]
 }
 
-psiuniform <- function(min,max,n){
+psiuniform <- function(n,min,max){
     return(runif(n,min,max))
 }
 
-psinormal <- function(mean,stdev,n){
+psinormal <- function(n,mean,stdev){
     return(rnorm(n,mean,stdev))
 }
 
-psigamma <- function(shape,scale,n){
+psigamma <- function(n,shape,scale){
     return(rgamma(n,shape,1/scale))
 }
 
-psitriangular <- function(min,likely,max,n){
+psitriangular <- function(n,min,likely,max){
     f <- function(x) {
         p <- rep(0, length(x))
         p[x>min&x<likely] <- (2/(max-min)/(likely-min))*x[x>min&x<likely]-(2/(max-min)/(likely-min))*min
@@ -67,7 +67,7 @@ psitriangular <- function(min,likely,max,n){
     return(samples)
 }
 
-psicumul <- function(min,max,range,prob,n){
+psicumul <- function(n,min,max,range,prob){
     f <- function(x) {
         p <- rep(0, length(x))
         p[x>min&x<range[1]] <- prob[1]/(range[1]-min)

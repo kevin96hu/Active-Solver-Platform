@@ -131,17 +131,6 @@ eval <- function(x,opti){
     return(x)
 }
 
-# k <- start()
-# attr(k,"class")<-"create"
-# k <- tree(k,"a","choice",2,c("treasury","LLC"))
-# attr(k,"class")<-"addnode"
-# k <- tree(k,"LLC","chance",2,c("fav","unfav"),c(0.7,0.3))
-# attr(k,"class")<-c("leafnode")
-# k <- tree(k,"fav",c(190000,-110000))
-# k <- tree(k,"unfav",c(-110000,190000))
-# k <- tree(k,"treasury",c(2000))
-# attr(k,"class")<-"eval"
-# k <- tree(k,"max")
 
 # k <- start()
 # k <- create(k,"a","choice",2,c("treasury","LLC"))
@@ -183,3 +172,4 @@ eval <- function(x,opti){
 # k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=c(-110000,190000))
 # k <- addnode(k,"unfav2",leaf_nodevalue=2000)
 # k <- eval(k,"max")
+

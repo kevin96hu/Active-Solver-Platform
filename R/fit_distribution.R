@@ -59,7 +59,7 @@ ks_fitdist <- function(x){
     row.names(ks_result) <- seq(1,nrow(ks_result))
     #result[["ks_result"]] <- ks_result
 
-    for (name in ks_result$dist_name){
+    for (name in ks_result$dist_name[nrow(ks_result):1]){
         if (name %in% c("exponential","Poisson","geometric")){
             hist(x,freq=F,main=paste("Histogram of",name,"distribution \n parameter:",names(distr[[name]]$parameter),"=",round(result[[name]],3)),col="gray")
             lines(density(x),lwd=2,col="blue")
