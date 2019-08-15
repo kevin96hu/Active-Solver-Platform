@@ -125,7 +125,7 @@ addnode <- function(x,name,type=NA,n=NA,sub_name=NA,prob=NA,value=NA,leaf_nodeva
 #     return(x)
 # }
 
-eval <- function(x,opti){
+value <- function(x,opti){
     attr(x,"class")<-c("tree","eval")
     x <- tree(x,opti)
     return(x)
@@ -140,7 +140,7 @@ eval <- function(x,opti){
 # k <- leafnode(k,"fav",c(190000,-110000))
 # k <- leafnode(k,"unfav",c(-110000,190000))
 # k <- leafnode(k,"treasury",c(2000))
-# k <- eval(k,"max")
+# k <- value(k,"max")
 
 # k <- start()
 # k <- create(k,"a","choice",2,c("treasury","LLC"))
@@ -149,7 +149,7 @@ eval <- function(x,opti){
 # k <- leafnode(k,"fav",c(115000,2000))
 # k <- leafnode(k,"unfav",c(-35000,2000))
 # k <- leafnode(k,"no",3000)
-# k <- eval(k,"max")
+# k <- value(k,"max")
 #
 # k <- start()
 # k <- create(k,"a","choice",2,c("treasury","LLC"))
@@ -161,7 +161,7 @@ eval <- function(x,opti){
 # k <- leafnode(k,"unfav1",value=c(190000))
 # k <- leafnode(k,"unfav2",value=c(-110000,190000))
 # k <- leafnode(k,"fav2",value=c(2000))
-# k <- eval(k,"max")
+# k <- value(k,"max")
 
 # k <- tree()
 # k <- create(k,"a","choice",2,c("treasury","LLC"))
@@ -171,5 +171,5 @@ eval <- function(x,opti){
 # k <- addnode(k,"treasury","chance",2,c("unfav2","fav2"),c(0.75,0.25))
 # k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=c(-110000,190000))
 # k <- addnode(k,"unfav2",leaf_nodevalue=2000)
-# k <- eval(k,"max")
+# k <- value(k,"max")
 
