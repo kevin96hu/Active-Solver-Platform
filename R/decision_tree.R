@@ -35,7 +35,12 @@ tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
     }
     else{
         if (name %in% x$var) stop("type in a different node name")
-        else x$var <- append(x$var,name)
+        else {
+            temp = 0
+            for (item in x$sub_name) temp = temp + (name %in% item)
+            if (temp==0) stop("type in the name of an existing node")
+            else x$var <- append(x$var,name)
+             }
         x$type <- append(x$type,type)
         for (i in 1:length(x$sub_name)) {if (name %in% x$sub_name[[i]]) k <- x$yval[i]+1}
         x$yval <- append(x$yval,k)
