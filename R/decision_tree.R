@@ -9,18 +9,23 @@ tree.default <- function(x){
     attr(t,'class') <- c('tree')
     return(t)
 }
-tree.create <- function(x,name,type,n,sub_name,prob=NA,value=NA){
+tree.create <- function(x,name,type,n,sub_name,prob=NA){
     x$var <- name
     x$type <- type
     x$yval <- 1
     x$n <- n
     x$sub_name[[x$order]] <- sub_name
-    x$prob[[x$order]] <- prob
-    x$value <- value
+    if (!(type %in% c("choice","chance"))) stop("choose the correct node type")
+    if (type=="chance" & identical(prob,NA)) stop("type the probability of choices")
+    if (type=="chance" & abs(sum(prob)-1)>0.001) stop("check the sum of probability")
+    if (type=="chance" & n!=length(prob)) stop("check number of probability")
+    if (type=="choice") x$prob[[x$order]] <- NA
+    else x$prob[[x$order]] <- prob
+    x$value <- NA
     x$order <- x$order+1
     return(x)
 }
-tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,value=NA,leaf_nodevalue=NA){
+tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
     if (identical(type,NA)){
         if (identical(x$father_name,NA)) x$father_name <- name
         else x$father_name <- append(x$father_name,name)
@@ -35,8 +40,13 @@ tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,value=NA,leaf_nodeval
         x$yval <- append(x$yval,k)
         x$n <- append(x$n,n)
         x$sub_name[[x$order]] <- sub_name
-        x$prob[[x$order]] <- prob
-        x$value <- append(x$value,value)
+        if (!(type %in% c("choice","chance"))) stop("choose the correct node type")
+        if (type=="chance" & identical(prob,NA)) stop("type the probability of choices")
+        if (type=="chance" & abs(sum(prob)-1)>0.001) stop("check the sum of probability")
+        if (type=="chance" & n!=length(prob)) stop("check number of probability")
+        if (type=="choice") x$prob[[x$order]] <- NA
+        else x$prob[[x$order]] <- prob
+        x$value <- append(x$value,NA)
         if (!identical(leaf_nodevalue,NA)){
             if (identical(x$father_name,NA)){
                 x$father_name <- name
@@ -107,15 +117,15 @@ tree.eval <- function(x,opti){
     return(x)
 }
 
-create <- function(x,name,type,n,sub_name,prob=NA,value=NA){
+create <- function(x,name,type,n,sub_name,prob=NA){
     attr(x,"class")<-c("tree","create")
-    x <- tree(x,name,type,n,sub_name,prob,value)
+    x <- tree(x,name,type,n,sub_name,prob)
     return(x)
 }
 
-addnode <- function(x,name,type=NA,n=NA,sub_name=NA,prob=NA,value=NA,leaf_nodevalue=NA){
+addnode <- function(x,name,type=NA,n=NA,sub_name=NA,prob=NA,leaf_nodevalue=NA){
     attr(x,"class")<-c("tree","addnode")
-    x <- tree(x,name,type,n,sub_name,prob,value,leaf_nodevalue)
+    x <- tree(x,name,type,n,sub_name,prob,leaf_nodevalue)
     return(x)
 }
 
