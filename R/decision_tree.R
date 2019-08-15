@@ -41,7 +41,7 @@ tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
         x$yval <- append(x$yval,k)
         x$n <- append(x$n,n)
         for (s_name in sub_name){
-            for (item in sub_name[]){
+            for (item in x$sub_name){
                 if (s_name %in% item) stop("check the sub name of the node")
             }
         }
