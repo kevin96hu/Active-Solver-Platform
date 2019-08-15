@@ -34,11 +34,17 @@ tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
         x$nn <- x$nn+1
     }
     else{
-        x$var <- append(x$var,name)
+        if (name %in% x$var) stop("type in a different node name")
+        else x$var <- append(x$var,name)
         x$type <- append(x$type,type)
         for (i in 1:length(x$sub_name)) {if (name %in% x$sub_name[[i]]) k <- x$yval[i]+1}
         x$yval <- append(x$yval,k)
         x$n <- append(x$n,n)
+        for (s_name in sub_name){
+            for (item in sub_name){
+                if (s_name %in% item) stop("check the sub name of the node")
+            }
+        }
         x$sub_name[[x$order]] <- sub_name
         if (!(type %in% c("choice","chance"))) stop("choose the correct node type")
         if (type=="chance" & identical(prob,NA)) stop("type the probability of choices")
