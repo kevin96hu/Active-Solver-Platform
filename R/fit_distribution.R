@@ -61,20 +61,20 @@ ks_fitdist <- function(x){
 
     for (name in ks_result$dist_name[nrow(ks_result):1]){
         if (name %in% c("exponential","Poisson","geometric")){
-            hist(x,freq=F,main=paste("Histogram of",name,"distribution \n parameter:",names(distr[[name]]$parameter),"=",round(result[[name]],3)),col="gray")
+            hist(x,freq=F,main=paste("Histogram of",name,"distribution \n parameter:",names(distr[[name]]$parameter),"=",round(result[[name]],3)),col="gray",xlab=as.character(x),ylim=c(0,0.12))
             lines(density(x),lwd=2,col="blue")
             y <- eval(parse(text=paste0(distr[[name]]$function_name,"(",n,",",result[[name]],")")))
             lines(density(y),lwd=2,col="red")
         }
         else{
             if (name=="t"){
-                hist(x,freq=F,main=paste("Histogram of",name,"distribution \n parameter:",names(distr[[name]]$parameter)[3],"=",round(result[[name]][3],3)),col="gray")
+                hist(x,freq=F,main=paste("Histogram of",name,"distribution \n parameter:",names(distr[[name]]$parameter)[3],"=",round(result[[name]][3],3)),col="gray",xlab=as.character(x),ylim=c(0,0.12))
                 lines(density(x),lwd=2,col="blue")
                 y <- eval(parse(text=paste0(distr[[name]]$function_name,"(",n,",",result[[name]][3],")")))
                 lines(density(y),lwd=2,col="red")
             }
             else{
-                hist(x,freq=F,main=paste("Histogram of",name,"distribution \n parameter:",names(distr[[name]]$parameter)[1],"=",round(result[[name]][1],3),names(distr[[name]]$parameter)[2],"=",round(result[[name]][2],3)),col="gray")
+                hist(x,freq=F,main=paste("Histogram of",name,"distribution \n parameter:",names(distr[[name]]$parameter)[1],"=",round(result[[name]][1],3),names(distr[[name]]$parameter)[2],"=",round(result[[name]][2],3)),col="gray",xlab=as.character(x),ylim=c(0,0.12))
                 lines(density(x),lwd=2,col="blue")
                 y <- eval(parse(text=paste0(distr[[name]]$function_name,"(",n,",",result[[name]][1],",",result[[name]][2],")")))
                 lines(density(y),lwd=2,col="red")
