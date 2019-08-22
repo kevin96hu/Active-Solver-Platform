@@ -1,10 +1,34 @@
+x_one <- function(xlim,maxdepth,depth){
+    # 5*(maxdepth+2)*(maxdepth-depth)-5*(maxdepth+depth+1)*(maxdepth-depth)/2
+    # (maxdepth+6)*(maxdepth-depth)-(maxdepth+depth+1)*(maxdepth-depth)/2
+    # 40*(maxdepth-depth+1)
+    return(xlim-(3*maxdepth-3*depth+53)*(maxdepth-depth)-75)
+}
+
+x_two <- function(xlim,maxdepth,depth){
+    return(xlim-(3*maxdepth-3*depth+58)*(maxdepth-depth)-85)
+}
+
+x_three <- function(xlim,maxdepth,depth){
+    return(xlim-(3*maxdepth-3*depth+58.5)*(maxdepth-depth)-88)
+}
+
+x_r <- function(maxdepth,depth){
+    return((maxdepth+6-depth)/2)
+}
+
+x_four <- function(xlim,maxdepth,depth){
+    return(xlim-(3*maxdepth-3*depth+59)*(maxdepth-depth)-91)
+}
+
 tree.plot <- function(k){
     if(!require(plotrix)){
         install.packages("plotrix")}
     library(plotrix)
     if (!("tree" %in% class(k))) stop("Please use a tree class")
-    xlim <- (5+max(k$yval)/2)*(max(k$yval)+1)+40*(max(k$yval)+1)+5*(max(k$yval)+3)*max(k$yval)/2
-    depth <- max(k$yval)+1
+    md <- max(k$yval)
+    xlim <- (5+md/2)*(md+1)+40*(md+1)+5*(md+3)*md/2
+    depth <- md+1
     len <- 0
     for (item in k$leafnode_value) len <- len + length(item)
     ylim <- 25*(len-1)+10
@@ -19,34 +43,32 @@ tree.plot <- function(k){
                 lines(c(xlim-35,xlim-75),c(20*len-10,20*len-10))
                 text(xlim-15,20*len-10,k$leafnode_value[[which(k$var[i] == k$father_name)]][j])
                 if (!identical(k$leaf_name[[which(k$var[i] == k$father_name)]],NA)){
-                    text(xlim-55,20*len-5,k$leaf_name[[which(k$var[i] == k$father_name)]][j])
+                    text(xlim-55,20*len-6,k$leaf_name[[which(k$var[i] == k$father_name)]][j])
                     if (!identical(k$prob[[i]],NA)) text(xlim-55,20*len,k$prob[[i]][j])
                 }
-                else if (!identical(k$prob[[i]],NA)) text(xlim-55,20*len-5,k$prob[[i]][j])
-                coor$x[j] <- xlim-75
+                else if (!identical(k$prob[[i]],NA)) text(xlim-55,20*len-6,k$prob[[i]][j])
                 coor$y[j] <- 20*len-10
                 len <- len-1
             }
             for (j in 1:length(k$leafnode_value[[which(k$var[i] == k$father_name)]])){
-                lines(c(coor$x[j]-5*(depth-k$yval[i]+1),coor$x[j]),c(mean(coor$y),coor$y[j]))
-                coor$x[j] <- coor$x[j]-5*(depth-k$yval[i]+1)
+                lines(c(x_two(xlim,md,k$yval[i]),x_one(xlim,md,k$yval[i])),c(mean(coor$y),coor$y[j]))
             }
             if (k$type[i]=="chance"){
-                draw.circle(coor$x[1]-(depth-k$yval[i]+5)/2,mean(coor$y),(depth-k$yval[i]+5)/2)
-                text(coor$x[1]-(depth-k$yval[i]+5)/2,mean(coor$y)+5+max(k$yval)-k$yval[i],k$value[i])
-                coor[[k$var[i]]] <- c(coor$x[1]-(depth-k$yval[i]+5),mean(coor$y))
+                draw.circle(x_three(xlim,md,k$yval[i]),mean(coor$y),x_r(md,k$yval[i]))
+                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[i])
+                coor[[k$var[i]]] <- mean(coor$y)
             }
             else {
-                rect(coor$x[1]-(depth-k$yval[i]+5),mean(coor$y)-(depth-k$yval[i]+5)/2,coor$x[1],mean(coor$y)+(depth-k$yval[i]+5)/2)
-                text(coor$x[1]-(depth-k$yval[i]+5)/2,mean(coor$y)+5+max(k$yval)-k$yval[i],k$value[i])
-                coor[[k$var[i]]] <- c(coor$x[1]-(depth-k$yval[i]+5),mean(coor$y))
+                rect(x_four(xlim,md,k$yval[i]),mean(coor$y)-x_r(md,k$yval[i]),x_two(xlim,md,k$yval[i]),mean(coor$y)+x_r(md,k$yval[i]))
+                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[i])
+                coor[[k$var[i]]] <- mean(coor$y)
             }
         }
         else {
             y <- 0
             for (name in k$sub_name[[i]]){
                 if (name %in% k$var){
-                    y <- y + coor[[name]][2]
+                    y <- y + coor[[name]]
                 }
                 else {
                     y <- y + 20*len-10
@@ -54,42 +76,42 @@ tree.plot <- function(k){
             }
             for (name in k$sub_name[[i]]){
                 if (name %in% k$var){
-                    lines(c(coor[[name]][1]-40,coor[[name]][1]),c(coor[[name]][2],coor[[name]][2]))
-                    text(coor[[name]][1]-20,coor[[name]][2]+5,name)
+                    lines(c(x_one(xlim,md,k$yval[i]),x_four(xlim,md,k$yval[i]+1)),c(coor[[name]],coor[[name]]))
+                    text(x_one(xlim,md,k$yval[i])+20,coor[[name]]+5,name)
                     if (!identical(k$prob[[i]],NA)){
-                        text(coor[[name]][1]-20,coor[[name]][2]+10,k$prob[[i]][which(name==k$sub_name[[i]])])
+                        text(x_one(xlim,md,k$yval[i])+20,coor[[name]]+10,k$prob[[i]][which(name==k$sub_name[[i]])])
                     }
                 }
                 else {
-                    lines(c( xlim-(3*(max(k$yval)-k$yval[i])^2+53*(max(k$yval)-k$yval[i])+75) ,xlim-35),c(20*len-10,20*len-10))
-                    text(xlim-(3*(max(k$yval)-k$yval[i])^2+53*(max(k$yval)-k$yval[i])+75)+20,20*len-5,name)
+                    lines(c(x_one(xlim,md,k$yval[i]),xlim-35),c(20*len-10,20*len-10))
+                    text(x_one(xlim,md,k$yval[i])+20,20*len-5,name)
                     text(xlim-15,20*len-10,k$leafnode_value[[which(name == k$father_name)]])
                     if (!identical(k$prob[[i]],NA)){
-                        text(xlim-(3*(max(k$yval)-k$yval[i])^2+53*(max(k$yval)-k$yval[i])+75)+20,20*len,k$prob[[i]][which(name==k$sub_name[[i]])])
+                        text(x_one(xlim,md,k$yval[i])+20,20*len,k$prob[[i]][which(name==k$sub_name[[i]])])
                     }
                 }
             }
             for (name in k$sub_name[[i]]){
                 if (name %in% k$var){
-                    lines(c(coor[[name]][1]-40-5*(depth-k$yval[i]+1),coor[[name]][1]-40),c(y/length(k$sub_name[[i]]),coor[[name]][2]))
-                    coor$x <- coor[[name]][1]-40-5*(depth-k$yval[i]+1)
-                    coor$y <- y/length(k$sub_name[[i]])
+                    lines(c(x_two(xlim,md,k$yval[i]),x_one(xlim,md,k$yval[i])),c(y/k$n[i],coor[[name]]))
+                    coor$y <- y/k$n[i]
                 }
                 else {
-                    lines(c( xlim-(3*(max(k$yval)-k$yval[i])^2+58*(max(k$yval)-k$yval[i])+85) , xlim-(3*(max(k$yval)-k$yval[i])^2+53*(max(k$yval)-k$yval[i])+75) ),c(y/length(k$sub_name[[i]]),20*len-10))
+                    lines(c(x_two(xlim,md,k$yval[i]),x_one(xlim,md,k$yval[i])),c(y/k$n[i],20*len-10))
                     len <- len - 1
                 }
             }
             if (k$type[i]=="chance"){
-                draw.circle(coor$x-(depth-k$yval[i]+5)/2,coor$y,(depth-k$yval[i]+5)/2)
-                text(coor$x-(depth-k$yval[i]+5)/2,coor$y+5+max(k$yval)-k$yval[i],k$value[i])
-                coor[[k$var[i]]] <- c(coor$x-(depth-k$yval[i]+5),coor$y)
+                draw.circle(x_three(xlim,md,k$yval[i]),coor$y,x_r(md,k$yval[i]))
+                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[i])
+                coor[[k$var[i]]] <- coor$y
             }
             else {
-                rect(coor$x-(depth-k$yval[i]+5),coor$y-(depth-k$yval[i]+5)/2,coor$x,coor$y+(depth-k$yval[i]+5)/2)
-                text(coor$x-(depth-k$yval[i]+5)/2,coor$y+5+max(k$yval)-k$yval[i],k$value[i])
-                coor[[k$var[i]]] <- c(coor$x-(depth-k$yval[i]+5),coor$y)
+                rect(x_four(xlim,md,k$yval[i]),mean(coor$y)-x_r(md,k$yval[i]),x_two(xlim,md,k$yval[i]),mean(coor$y)+x_r(md,k$yval[i]))
+                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[i])
+                coor[[k$var[i]]] <- coor$y
             }
         }
     }
 }
+
