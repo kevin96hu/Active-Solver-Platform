@@ -77,14 +77,14 @@ tree.plot <- function(k){
             for (name in k$sub_name[[i]]){
                 if (name %in% k$var){
                     lines(c(x_one(xlim,md,k$yval[i]),x_four(xlim,md,k$yval[i]+1)),c(coor[[name]],coor[[name]]))
-                    text(x_one(xlim,md,k$yval[i])+20,coor[[name]]+5,name)
+                    text(x_one(xlim,md,k$yval[i])+20,coor[[name]]+4,name)
                     if (!identical(k$prob[[i]],NA)){
                         text(x_one(xlim,md,k$yval[i])+20,coor[[name]]+10,k$prob[[i]][which(name==k$sub_name[[i]])])
                     }
                 }
                 else {
                     lines(c(x_one(xlim,md,k$yval[i]),xlim-35),c(20*len-10,20*len-10))
-                    text(x_one(xlim,md,k$yval[i])+20,20*len-5,name)
+                    text(x_one(xlim,md,k$yval[i])+20,20*len-6,name)
                     text(xlim-15,20*len-10,k$leafnode_value[[which(name == k$father_name)]])
                     if (!identical(k$prob[[i]],NA)){
                         text(x_one(xlim,md,k$yval[i])+20,20*len,k$prob[[i]][which(name==k$sub_name[[i]])])
