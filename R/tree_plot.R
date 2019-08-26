@@ -1,3 +1,5 @@
+treeplot <- function(x,...) UseMethod("treeplot",x)
+
 x_one <- function(xlim,maxdepth,depth){
     # 5*(maxdepth+2)*(maxdepth-depth)-5*(maxdepth+depth+1)*(maxdepth-depth)/2
     # (maxdepth+6)*(maxdepth-depth)-(maxdepth+depth+1)*(maxdepth-depth)/2
@@ -21,11 +23,10 @@ x_four <- function(xlim,maxdepth,depth){
     return(xlim-(3*maxdepth-3*depth+59)*(maxdepth-depth)-91)
 }
 
-tree.plot <- function(k){
+treeplot.default <- function(k){
     if(!require(plotrix)){
         install.packages("plotrix")}
     library(plotrix)
-    if (!("tree" %in% class(k))) stop("Please use a tree class")
     md <- max(k$yval)
     xlim <- (5+md/2)*(md+1)+40*(md+1)+5*(md+3)*md/2
     depth <- md+1
@@ -55,12 +56,12 @@ tree.plot <- function(k){
             }
             if (k$type[i]=="chance"){
                 draw.circle(x_three(xlim,md,k$yval[i]),mean(coor$y),x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[i])
+                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[[i]])
                 coor[[k$var[i]]] <- mean(coor$y)
             }
             else {
                 rect(x_four(xlim,md,k$yval[i]),mean(coor$y)-x_r(md,k$yval[i]),x_two(xlim,md,k$yval[i]),mean(coor$y)+x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[i])
+                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[[i]])
                 coor[[k$var[i]]] <- mean(coor$y)
             }
         }
@@ -103,15 +104,18 @@ tree.plot <- function(k){
             }
             if (k$type[i]=="chance"){
                 draw.circle(x_three(xlim,md,k$yval[i]),coor$y,x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[i])
+                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[[i]])
                 coor[[k$var[i]]] <- coor$y
             }
             else {
                 rect(x_four(xlim,md,k$yval[i]),mean(coor$y)-x_r(md,k$yval[i]),x_two(xlim,md,k$yval[i]),mean(coor$y)+x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[i])
+                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[[i]])
                 coor[[k$var[i]]] <- coor$y
             }
         }
     }
 }
 
+treeplot.dist <- function(k,...){
+    hist(k$value[[1]],...)
+}

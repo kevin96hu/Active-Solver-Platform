@@ -1,12 +1,5 @@
-# start <- function(){
-#     t <- list(var=NA,type=NA,yval=NA,n=NA,sub_name=list(NA),prob=list(NA),value=NA,father_name=NA,leaf_name=list(NA),leafnode_value=list(NA),order=1,nn=1)
-#     attr(t,'class') <- c('tree')
-#     return(t)
-# }
-tree <- function(x,...) UseMethod("tree")
-tree.default <- function(x){
-    t <- list(var=NA,type=NA,yval=NA,n=NA,sub_name=list(NA),prob=list(NA),value=NA,father_name=NA,leaf_name=list(NA),leafnode_value=list(NA),order=1,nn=1)
-    attr(t,'class') <- c('tree')
+tree <- function(x){
+    t <- list(var=NA,type=NA,yval=NA,n=NA,sub_name=list(NA),prob=list(NA),value=list(NA),father_name=NA,leaf_name=list(NA),leafnode_value=list(NA),order=1,nn=1)
     return(t)
 }
 tree.create <- function(x,name,type,n,sub_name,prob=NA){
@@ -21,7 +14,7 @@ tree.create <- function(x,name,type,n,sub_name,prob=NA){
     if (type=="chance" & n!=length(prob)) stop("check number of probability")
     if (type=="choice") x$prob[[x$order]] <- NA
     else x$prob[[x$order]] <- prob
-    x$value <- NA
+    x$value[[x$order]] <- NA
     x$order <- x$order+1
     return(x)
 }
@@ -31,6 +24,9 @@ tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
         else x$father_name <- append(x$father_name,name)
         x$leaf_name[[x$nn]] <- sub_name
         x$leafnode_value[[x$nn]] <- leaf_nodevalue
+        for (item in x$leafnode_value[[x$nn]]){
+            if (length(item)>=2) attr(x,"class") <- c("dist")
+        }
         x$nn <- x$nn+1
     }
     else{
@@ -57,18 +53,24 @@ tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
         if (type=="chance" & n!=length(prob)) stop("check number of probability")
         if (type=="choice") x$prob[[x$order]] <- NA
         else x$prob[[x$order]] <- prob
-        x$value <- append(x$value,NA)
+        x$value[[x$order]] <- NA
         if (!identical(leaf_nodevalue,NA)){
             if (identical(x$father_name,NA)){
                 x$father_name <- name
                 x$leaf_name[[x$nn]] <- sub_name
                 x$leafnode_value[[x$nn]] <- leaf_nodevalue
+                for (item in x$leafnode_value[[x$nn]]){
+                    if (length(item)>=2) attr(x,"class") <- c("dist")
+                }
                 x$nn <- x$nn+1
             }
             else{
                 x$father_name <- append(x$father_name,name)
                 x$leaf_name[[x$nn]] <- sub_name
                 x$leafnode_value[[x$nn]] <- leaf_nodevalue
+                for (item in x$leafnode_value[[x$nn]]){
+                    if (length(item)>=2) attr(x,"class") <- c("tree","dist")
+                }
                 x$nn <- x$nn+1
             }
         }
@@ -106,37 +108,41 @@ tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
 tree.eval <- function(x,opti){
     for (i in length(x$value):1){
         if (x$var[i] %in% x$father_name) {
-            if (x$type[i]=="chance") x$value[i] <- x$prob[[i]] %*% x$leafnode_value[[which(x$var[i]==x$father_name)]]
-            else if (opti=="max") x$value[i] <- max(x$leafnode_value[[which(x$var[i]==x$father_name)]])
-                 else x$value[i] <- min(x$leafnode_value[[which(x$var[i]==x$father_name)]])
+            # if ("dist" %in% attr(x,"class")){
+            temp <- 0
+            num <- which(x$var[i]==x$father_name)
+            for (j in 1:length(x$leafnode_value[[num]])) temp <- temp + x$leafnode_value[[num]][[j]]
+            for (j in 1:length(x$leafnode_value[[num]])) x$leafnode_value[[num]][[j]] <- x$leafnode_value[[num]][[j]] + temp - temp
+            ma <- t(matrix(unlist(x$leafnode_value[[num]]),ncol=x$n[which(x$var[i]==x$father_name)]))
+            if (x$type[i]=="chance") x$value[[i]] <- as.vector(x$prob[[i]] %*% ma)
+            else if (opti=="max") x$value[[i]] <- as.vector(apply(ma,2,max))
+                 else x$value[[i]] <- as.vector(apply(ma,2,min))
         }
         else {
-            t <- NULL
+            t <- list()
             for (j in 1:length(x$sub_name[[i]])){
-                if (x$sub_name[[i]][j] %in% x$var) t[j] <- x$value[which(x$sub_name[[i]][j]==x$var)]
-                else t[j] <- x$leafnode_value[[which(x$sub_name[[i]][j]==x$father_name)]]
+                if (x$sub_name[[i]][j] %in% x$var) t[[j]] <- as.vector(x$value[[which(x$sub_name[[i]][j]==x$var)]])
+                else t[[j]] <- as.vector(x$leafnode_value[[which(x$sub_name[[i]][j]==x$father_name)]][[1]])
             }
-            if (x$type[i]=="chance"){
-                x$value[i] <- x$prob[[i]] %*% t
-                }
-             else {
-                 if (opti=='max') x$value[i] <- max(t)
-                 else x$value[i] <- min(t)
-             }
+            temp <- 0
+            for (j in 1:length(t)) temp <- temp + t[[j]]
+            for (j in 1:length(t)) t[[j]] <- t[[j]] + temp - temp
+            ma <- t(matrix(unlist(t),ncol=length(t)))
+            if (x$type[i]=="chance") x$value[[i]] <- as.vector(x$prob[[i]] %*% ma)
+            else if (opti=="max") x$value[[i]] <- as.vector((apply(ma,2,max)))
+                  else x$value[[i]] <- as.vector((apply(ma,2,min)))
         }
     }
     return(x)
 }
 
 create <- function(x,name,type,n,sub_name,prob=NA){
-    attr(x,"class")<-c("tree","create")
-    x <- tree(x,name,type,n,sub_name,prob)
+    x <- tree.create(x,name,type,n,sub_name,prob)
     return(x)
 }
 
 addnode <- function(x,name,type=NA,n=NA,sub_name=NA,prob=NA,leaf_nodevalue=NA){
-    attr(x,"class")<-c("tree","addnode")
-    x <- tree(x,name,type,n,sub_name,prob,leaf_nodevalue)
+    x <- tree.addnode(x,name,type,n,sub_name,prob,leaf_nodevalue)
     return(x)
 }
 
@@ -146,9 +152,8 @@ addnode <- function(x,name,type=NA,n=NA,sub_name=NA,prob=NA,leaf_nodevalue=NA){
 #     return(x)
 # }
 
-value <- function(x,opti){
-    attr(x,"class")<-c("tree","eval")
-    x <- tree(x,opti)
+value <- function(x,opti="max"){
+    x <- tree.eval(x,opti)
     return(x)
 }
 
@@ -171,26 +176,25 @@ value <- function(x,opti){
 # k <- leafnode(k,"unfav",c(-35000,2000))
 # k <- leafnode(k,"no",3000)
 # k <- value(k,"max")
-#
-# k <- start()
-# k <- create(k,"a","choice",2,c("treasury","LLC"))
-# k <- addnode(k,"LLC","chance",2,c("fav1","unfav1"),c(0.3,0.7))
-# k <- addnode(k,"fav1","chance",2,c("yes","no"),prob=c(0.5,0.5))
-# k <- addnode(k,"treasury","chance",2,c("unfav2","fav2"),c(0.75,0.25))
-# k <- addnode(k,"unfav2","chance",2,prob=c(0.75,0.25))
-# k <- leafnode(k,"fav1",c("yes","no"),c(190000,-110000))
-# k <- leafnode(k,"unfav1",value=c(190000))
-# k <- leafnode(k,"unfav2",value=c(-110000,190000))
-# k <- leafnode(k,"fav2",value=c(2000))
-# k <- value(k,"max")
 
 # k <- tree()
 # k <- create(k,"a","choice",2,c("treasury","LLC"))
 # k <- addnode(k,"LLC","chance",2,c("fav1","unfav1"),c(0.3,0.7))
-# k <- addnode(k,"fav1","chance",2,c("yes","no"),prob=c(0.5,0.5),leaf_nodevalue=c(190000,-110000))
-# k <- addnode(k,"unfav1",leaf_nodevalue=190000)
+# k <- addnode(k,"fav1","chance",2,c("yes","no"),prob=c(0.5,0.5),leaf_nodevalue=list(7000,20000))
+# k <- addnode(k,"unfav1",leaf_nodevalue=list(190000))
 # k <- addnode(k,"treasury","chance",2,c("unfav2","fav2"),c(0.75,0.25))
-# k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=c(-110000,190000))
-# k <- addnode(k,"unfav2",leaf_nodevalue=2000)
+# k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=list(-110000,190000))
+# k <- addnode(k,"unfav2",leaf_nodevalue=list(2000))
 # k <- value(k,"max")
+# treeplot(k)
 
+k <- tree()
+k <- create(k,"a","choice",2,c("treasury","LLC"))
+k <- addnode(k,"LLC","chance",2,c("fav1","unfav1"),c(0.3,0.7))
+k <- addnode(k,"fav1","chance",2,c("yes","no"),prob=c(0.5,0.5),leaf_nodevalue=list(rnorm(10000,7000,100),20000))
+k <- addnode(k,"unfav1",leaf_nodevalue=list(190000))
+k <- addnode(k,"treasury","chance",2,c("unfav2","fav2"),c(0.75,0.25))
+k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=list(rnorm(100,-110000,20000),190000))
+k <- addnode(k,"unfav2",leaf_nodevalue=list(2000))
+k <- value(k,"max")
+treeplot(k,main="Histogram of simulation result",col="red")
