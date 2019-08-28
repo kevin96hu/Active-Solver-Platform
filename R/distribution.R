@@ -43,19 +43,19 @@ ricdf <- function(N, draw.set) {
     draw.set$xbin[match(pdraws,draw.set$pbin)]
 }
 
-psiuniform <- function(n,min,max){
+uniform <- function(n,min,max){
     return(runif(n,min,max))
 }
 
-psinormal <- function(n,mean,stdev){
+normal <- function(n,mean,stdev){
     return(rnorm(n,mean,stdev))
 }
 
-psigamma <- function(n,shape,scale){
+gamma <- function(n,shape,scale){
     return(rgamma(n,shape,1/scale))
 }
 
-psitriangular <- function(n,min,likely,max){
+triangular <- function(n,min,likely,max){
     f <- function(x) {
         p <- rep(0, length(x))
         p[x>min&x<likely] <- (2/(max-min)/(likely-min))*x[x>min&x<likely]-(2/(max-min)/(likely-min))*min
@@ -67,7 +67,7 @@ psitriangular <- function(n,min,likely,max){
     return(samples)
 }
 
-psicumul <- function(n,min,max,range,prob){
+cumul <- function(n,min,max,range,prob){
     f <- function(x) {
         p <- rep(0, length(x))
         p[x>min&x<range[1]] <- prob[1]/(range[1]-min)
@@ -82,25 +82,18 @@ psicumul <- function(n,min,max,range,prob){
     return(samples)
 }
 
-psimean <- function(data){
-    return(mean(data))
-}
 
-psistdev <- function(data){
-    return(sd(data))
-}
+# psipercentile <- function(data,p){
+#     return(quantile(data,prob=p))
+# }
 
-psipercentile <- function(data,p){
-    return(quantile(data,prob=p))
-}
-
-psimeanci <- function(mean,stdev,n,alpha=0.95){
+meanci <- function(mean,stdev,n,alpha=0.95){
     lower <- mean-qnorm((1+alpha)/2)*stdev/sqrt(n)
     higher <- mean+qnorm((1+alpha)/2)*stdev/sqrt(n)
     return(c(lower,higher))
 }
 
-psitarget <- function(data,value){
+target <- function(data,value){
     if (length(value)==1) return(sum(data<=value)/length(data))
     else {
         a <- NULL
@@ -109,7 +102,12 @@ psitarget <- function(data,value){
     }
 }
 
-psicitrials <- function(stdev,width,alpha=0.95){
+citrials <- function(stdev,width,alpha=0.95){
     return( ceiling((qnorm((1+alpha)/2)*stdev/width)^2) )
 }
+
+
+## use genNORTARA in NORTARA package to generate random number with specific correlation
+
+
 
