@@ -25,6 +25,7 @@ x_four <- function(xlim,maxdepth,depth){
 }
 
 #' @method treeplot default
+#' @S3method treeplot default
 treeplot.default <- function(k){
     md <- max(k$yval)
     xlim <- (5+md/2)*(md+1)+40*(md+1)+5*(md+3)*md/2
@@ -116,6 +117,7 @@ treeplot.default <- function(k){
 }
 
 #' @method treeplot dist
+#' @S3method treeplot dist
 treeplot.dist <- function(k,...){
     hist(k$value[[1]],...)
 }
