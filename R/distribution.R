@@ -43,21 +43,55 @@ ricdf <- function(N, draw.set) {
     draw.set$xbin[match(pdraws,draw.set$pbin)]
 }
 
+#' generate random numbers
+#'
+#' distribution helps generate random numbers with different diatributions
+#' It includes uniform, normal, gamma, triangular, cumulative distributions.
+#' confidence interval of a mean value, percentile of a number among a
+#' list of numbers and the least number of trials for a specific width of confidence
+#' interval are included
+#'
+#' @param n number of observations
+#' @param min the lower bound of a distribution
+#' @param max the higher bound of a diatribution
+#' @param mean vector of means
+#' @param stdev vector of standard deviations
+#' @param shape,scale shape and scale parameters. Must be positive, scale strictly
+#' @param likely the most likely number for triangular diatribution
+#' @param range a vector for breaks of a distribution
+#' @param prob cumulative probability for each breaks
+#' @param alpha confidence degree
+#' @param width required width for confidence interval
+#'
+#' @author Kevin Hu \email{kevinhu@bu.edu}
+#'
+#' @examples
+#' a <- triangular(10000,100,130,200)
+#' b <- cumul(1000,3,10,c(4,6),c(0.5,0.6))
+#' meanci(100,20,1000,alpha=0.9)
+#' target(b,0.8)
+#' citrials(20,1,alpha=0.9)
+#'
+#'
+#' @rdname distribution
 #' @export
 uniform <- function(n,min,max){
     return(runif(n,min,max))
 }
 
+#' @rdname distribution
 #' @export
 normal <- function(n,mean,stdev){
     return(rnorm(n,mean,stdev))
 }
 
+#' @rdname distribution
 #' @export
 gamma <- function(n,shape,scale){
     return(rgamma(n,shape,1/scale))
 }
 
+#' @rdname distribution
 #' @export
 triangular <- function(n,min,likely,max){
     f <- function(x) {
@@ -71,6 +105,7 @@ triangular <- function(n,min,likely,max){
     return(samples)
 }
 
+#' @rdname distribution
 #' @export
 cumul <- function(n,min,max,range,prob){
     f <- function(x) {
@@ -92,6 +127,7 @@ cumul <- function(n,min,max,range,prob){
 #     return(quantile(data,prob=p))
 # }
 
+#' @rdname distribution
 #' @export
 meanci <- function(mean,stdev,n,alpha=0.95){
     lower <- mean-qnorm((1+alpha)/2)*stdev/sqrt(n)
@@ -99,6 +135,7 @@ meanci <- function(mean,stdev,n,alpha=0.95){
     return(c(lower,higher))
 }
 
+#' @rdname distribution
 #' @export
 target <- function(data,value){
     if (length(value)==1) return(sum(data<=value)/length(data))
@@ -109,6 +146,7 @@ target <- function(data,value){
     }
 }
 
+#' @rdname distribution
 #' @export
 citrials <- function(stdev,width,alpha=0.95){
     return( ceiling((qnorm((1+alpha)/2)*stdev/width)^2) )
