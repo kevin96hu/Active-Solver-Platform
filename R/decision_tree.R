@@ -70,7 +70,7 @@ tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
                 x$leaf_name[[x$nn]] <- sub_name
                 x$leafnode_value[[x$nn]] <- leaf_nodevalue
                 for (item in x$leafnode_value[[x$nn]]){
-                    if (length(item)>=2) attr(x,"class") <- c("tree","dist")
+                    if (length(item)>=2) attr(x,"class") <- c("dist")
                 }
                 x$nn <- x$nn+1
             }

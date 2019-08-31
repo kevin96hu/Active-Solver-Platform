@@ -1,4 +1,4 @@
-#' @export
+#' @export treeplot
 treeplot <- function(x,...) UseMethod("treeplot",x)
 
 x_one <- function(xlim,maxdepth,depth){
@@ -24,6 +24,7 @@ x_four <- function(xlim,maxdepth,depth){
     return(xlim-(3*maxdepth-3*depth+59)*(maxdepth-depth)-91)
 }
 
+#' @method treeplot default
 treeplot.default <- function(k){
     md <- max(k$yval)
     xlim <- (5+md/2)*(md+1)+40*(md+1)+5*(md+3)*md/2
@@ -114,6 +115,7 @@ treeplot.default <- function(k){
     }
 }
 
+#' @method treeplot dist
 treeplot.dist <- function(k,...){
     hist(k$value[[1]],...)
 }
