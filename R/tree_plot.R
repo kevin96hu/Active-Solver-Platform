@@ -1,3 +1,4 @@
+#' @export
 treeplot <- function(x,...) UseMethod("treeplot",x)
 
 x_one <- function(xlim,maxdepth,depth){
@@ -24,9 +25,6 @@ x_four <- function(xlim,maxdepth,depth){
 }
 
 treeplot.default <- function(k){
-    if(!require(plotrix)){
-        install.packages("plotrix")}
-    library(plotrix)
     md <- max(k$yval)
     xlim <- (5+md/2)*(md+1)+40*(md+1)+5*(md+3)*md/2
     depth <- md+1
@@ -55,7 +53,7 @@ treeplot.default <- function(k){
                 lines(c(x_two(xlim,md,k$yval[i]),x_one(xlim,md,k$yval[i])),c(mean(coor$y),coor$y[j]))
             }
             if (k$type[i]=="chance"){
-                draw.circle(x_three(xlim,md,k$yval[i]),mean(coor$y),x_r(md,k$yval[i]))
+                plotrix::draw.circle(x_three(xlim,md,k$yval[i]),mean(coor$y),x_r(md,k$yval[i]))
                 text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[[i]])
                 coor[[k$var[i]]] <- mean(coor$y)
             }
@@ -103,7 +101,7 @@ treeplot.default <- function(k){
                 }
             }
             if (k$type[i]=="chance"){
-                draw.circle(x_three(xlim,md,k$yval[i]),coor$y,x_r(md,k$yval[i]))
+                plotrix::draw.circle(x_three(xlim,md,k$yval[i]),coor$y,x_r(md,k$yval[i]))
                 text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[[i]])
                 coor[[k$var[i]]] <- coor$y
             }

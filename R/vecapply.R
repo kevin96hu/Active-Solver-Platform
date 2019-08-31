@@ -1,3 +1,4 @@
+#' @export
 vecapply <- function(x=list(),FUN){
     temp <- 0
     for (i in 1:length(x)) temp <- temp + x[[i]]

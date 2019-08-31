@@ -1,3 +1,4 @@
+#' @export
 tree <- function(x){
     t <- list(var=NA,type=NA,yval=NA,n=NA,sub_name=list(NA),prob=list(NA),value=list(NA),father_name=NA,leaf_name=list(NA),leafnode_value=list(NA),order=1,nn=1)
     return(t)
@@ -136,11 +137,13 @@ tree.eval <- function(x,opti){
     return(x)
 }
 
+#' @export
 create <- function(x,name,type,n,sub_name,prob=NA){
     x <- tree.create(x,name,type,n,sub_name,prob)
     return(x)
 }
 
+#' @export
 addnode <- function(x,name,type=NA,n=NA,sub_name=NA,prob=NA,leaf_nodevalue=NA){
     x <- tree.addnode(x,name,type,n,sub_name,prob,leaf_nodevalue)
     return(x)
@@ -152,6 +155,7 @@ addnode <- function(x,name,type=NA,n=NA,sub_name=NA,prob=NA,leaf_nodevalue=NA){
 #     return(x)
 # }
 
+#' @export
 value <- function(x,opti="max"){
     x <- tree.eval(x,opti)
     return(x)

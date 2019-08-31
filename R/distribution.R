@@ -43,18 +43,22 @@ ricdf <- function(N, draw.set) {
     draw.set$xbin[match(pdraws,draw.set$pbin)]
 }
 
+#' @export
 uniform <- function(n,min,max){
     return(runif(n,min,max))
 }
 
+#' @export
 normal <- function(n,mean,stdev){
     return(rnorm(n,mean,stdev))
 }
 
+#' @export
 gamma <- function(n,shape,scale){
     return(rgamma(n,shape,1/scale))
 }
 
+#' @export
 triangular <- function(n,min,likely,max){
     f <- function(x) {
         p <- rep(0, length(x))
@@ -67,6 +71,7 @@ triangular <- function(n,min,likely,max){
     return(samples)
 }
 
+#' @export
 cumul <- function(n,min,max,range,prob){
     f <- function(x) {
         p <- rep(0, length(x))
@@ -87,12 +92,14 @@ cumul <- function(n,min,max,range,prob){
 #     return(quantile(data,prob=p))
 # }
 
+#' @export
 meanci <- function(mean,stdev,n,alpha=0.95){
     lower <- mean-qnorm((1+alpha)/2)*stdev/sqrt(n)
     higher <- mean+qnorm((1+alpha)/2)*stdev/sqrt(n)
     return(c(lower,higher))
 }
 
+#' @export
 target <- function(data,value){
     if (length(value)==1) return(sum(data<=value)/length(data))
     else {
@@ -102,6 +109,7 @@ target <- function(data,value){
     }
 }
 
+#' @export
 citrials <- function(stdev,width,alpha=0.95){
     return( ceiling((qnorm((1+alpha)/2)*stdev/width)^2) )
 }

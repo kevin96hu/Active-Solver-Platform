@@ -1,7 +1,5 @@
+#' @export
 ks_fitdist <- function(x){
-    if (!require(MASS)){
-        install.packages("MASS")}
-    library(MASS)
     dist_name <- c("beta", "cauchy", "chi-squared", "exponential", "f", "gamma", "geometric", "lognormal", "logistic", "negative binomial", "normal", "Poisson", "t", "weibull")
     distr <- list()
     result <- list()
@@ -24,14 +22,14 @@ ks_fitdist <- function(x){
 
     for (name in dist_name){
         if (name %in% c("cauchy","exponential","geometric","lognormal","negative binomial","normal","Poisson","t")){
-            trynext <- try(fitdistr(x,name),silent=TRUE)
+            trynext <- try(MASS::fitdistr(x,name),silent=TRUE)
             if ('try-error' %in% class(trynext)) result[[name]] <- NA
-            else result[[name]] <- fitdistr(x,name)[[1]]
+            else result[[name]] <- MASS::fitdistr(x,name)[[1]]
         }
         else{
-            trynext <- try(fitdistr(x,name,start=distr[[name]][["parameter"]]),silent=TRUE)
+            trynext <- try(MASS::fitdistr(x,name,start=distr[[name]][["parameter"]]),silent=TRUE)
             if ('try-error' %in% class(trynext)) result[[name]] <- NA
-            else result[[name]] <- fitdistr(x,name,start=distr[[name]][["parameter"]])[[1]]
+            else result[[name]] <- MASS::fitdistr(x,name,start=distr[[name]][["parameter"]])[[1]]
         }
     }
 
