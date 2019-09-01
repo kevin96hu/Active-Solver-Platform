@@ -1,3 +1,20 @@
+#' fit a distribution
+#'
+#' Given a bunch of numbers, ks_fitdist() gives the distribution best fitting
+#' the numbers. fitdistr() in MASS package is used to obtain the parameters. The
+#' rank of the distributions is based on Kolmogorov-Smirnov Tests. Distributions
+#' include beta, cauthy, chi-square, exponential, f, gamma, geometric, lognormal,
+#' logistic, negative binomial, normal, Poisson, t, weibull. Histograms for comparison
+#' are shown.
+#'
+#' @param x vector, numbers for fitting a distribution
+#'
+#' @author Kevin Hu \email{kevinhu@bu.edu}
+#'
+#' @examples
+#' b <- rgamma(10000,20,1)
+#' ks_fitdist(b)
+#'
 #' @export
 ks_fitdist <- function(x){
     dist_name <- c("beta", "cauchy", "chi-squared", "exponential", "f", "gamma", "geometric", "lognormal", "logistic", "negative binomial", "normal", "Poisson", "t", "weibull")

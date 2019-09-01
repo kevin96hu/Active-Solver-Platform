@@ -1,3 +1,46 @@
+#' Create a decision tree
+#'
+#' the list create stores all the info needed for a decision tree structure
+#' function tree() for initializing teh tree
+#' function create() for adding root node
+#' function addnode() for adding rest nodes
+#' function eval() for calculate the value for each node
+#'
+#' @param x an object of the tree
+#' @param name name of a decision node
+#' @param type character, means type of a decision node (chance or choice)
+#' @param n number of the branches of a node
+#' @param sub_name vector, the names of each branch, cannot be repeated
+#' @param prob vector, the probability for each branch. sum should be 1
+#' @param leafnode_value vector, the value of the leaf node
+#' @param opti character, "max" or "min" for type choice
+#'
+#' @author Kevin Hu \email{kevinhu@bu.edu}
+#'
+#' @examples
+#'
+#' k <- tree()
+#' k <- create(k,"a","choice",2,c("treasury","LLC"))
+#' k <- addnode(k,"LLC","chance",2,c("fav1","unfav1"),c(0.3,0.7))
+#' k <- addnode(k,"fav1","chance",2,c("yes","no"),prob=c(0.5,0.5),leaf_nodevalue=list(7000,20000))
+#' k <- addnode(k,"unfav1",leaf_nodevalue=list(190000))
+#' k <- addnode(k,"treasury","chance",2,c("unfav2","fav2"),c(0.75,0.25))
+#' k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=list(-110000,190000))
+#' k <- addnode(k,"unfav2",leaf_nodevalue=list(2000))
+#' k <- value(k,"max")
+#'
+#' # we can input some random numbers as leaf node value
+#' k <- tree()
+#' k <- create(k,"a","choice",2,c("treasury","LLC"))
+#' k <- addnode(k,"LLC","chance",2,c("fav1","unfav1"),c(0.3,0.7))
+#' k <- addnode(k,"fav1","chance",2,c("yes","no"),prob=c(0.5,0.5),leaf_nodevalue=list(rnorm(10000,7000,100),20000))
+#' k <- addnode(k,"unfav1",leaf_nodevalue=list(190000))
+#' k <- addnode(k,"treasury","chance",2,c("unfav2","fav2"),c(0.75,0.25))
+#' k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=list(rnorm(100,-110000,20000),190000))
+#' k <- addnode(k,"unfav2",leaf_nodevalue=list(2000))
+#' k <- value(k,"max")
+#'
+#' @rdname decision_tree
 #' @export
 tree <- function(x){
     t <- list(var=NA,type=NA,yval=NA,n=NA,sub_name=list(NA),prob=list(NA),value=list(NA),father_name=NA,leaf_name=list(NA),leafnode_value=list(NA),order=1,nn=1)
@@ -137,12 +180,14 @@ tree.eval <- function(x,opti){
     return(x)
 }
 
+#' @rdname decision_tree
 #' @export
 create <- function(x,name,type,n,sub_name,prob=NA){
     x <- tree.create(x,name,type,n,sub_name,prob)
     return(x)
 }
 
+#' @rdname decision_tree
 #' @export
 addnode <- function(x,name,type=NA,n=NA,sub_name=NA,prob=NA,leaf_nodevalue=NA){
     x <- tree.addnode(x,name,type,n,sub_name,prob,leaf_nodevalue)
@@ -155,50 +200,10 @@ addnode <- function(x,name,type=NA,n=NA,sub_name=NA,prob=NA,leaf_nodevalue=NA){
 #     return(x)
 # }
 
+#' @rdname decision_tree
 #' @export
 value <- function(x,opti="max"){
     x <- tree.eval(x,opti)
     return(x)
 }
 
-
-# k <- start()
-# k <- create(k,"a","choice",2,c("treasury","LLC"))
-# k <- addnode(k,"LLC","chance",2,c("fav","unfav"),c(0.3,0.7))
-# k <- addnode(k,"fav","chance",2,prob=c(0.75,0.25))
-# k <- addnode(k,"unfav","chance",2,prob=c(0.75,0.25))
-# k <- leafnode(k,"fav",c(190000,-110000))
-# k <- leafnode(k,"unfav",c(-110000,190000))
-# k <- leafnode(k,"treasury",c(2000))
-# k <- value(k,"max")
-
-# k <- start()
-# k <- create(k,"a","choice",2,c("treasury","LLC"))
-# k <- addnode(k,"fav","choice",2,c("LLC1","treasury1"))
-# k <- addnode(k,"unfav","choice",2,c("LLC2","treasury2"))
-# k <- leafnode(k,"fav",c(115000,2000))
-# k <- leafnode(k,"unfav",c(-35000,2000))
-# k <- leafnode(k,"no",3000)
-# k <- value(k,"max")
-
-# k <- tree()
-# k <- create(k,"a","choice",2,c("treasury","LLC"))
-# k <- addnode(k,"LLC","chance",2,c("fav1","unfav1"),c(0.3,0.7))
-# k <- addnode(k,"fav1","chance",2,c("yes","no"),prob=c(0.5,0.5),leaf_nodevalue=list(7000,20000))
-# k <- addnode(k,"unfav1",leaf_nodevalue=list(190000))
-# k <- addnode(k,"treasury","chance",2,c("unfav2","fav2"),c(0.75,0.25))
-# k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=list(-110000,190000))
-# k <- addnode(k,"unfav2",leaf_nodevalue=list(2000))
-# k <- value(k,"max")
-# treeplot(k)
-
-# k <- tree()
-# k <- create(k,"a","choice",2,c("treasury","LLC"))
-# k <- addnode(k,"LLC","chance",2,c("fav1","unfav1"),c(0.3,0.7))
-# k <- addnode(k,"fav1","chance",2,c("yes","no"),prob=c(0.5,0.5),leaf_nodevalue=list(rnorm(10000,7000,100),20000))
-# k <- addnode(k,"unfav1",leaf_nodevalue=list(190000))
-# k <- addnode(k,"treasury","chance",2,c("unfav2","fav2"),c(0.75,0.25))
-# k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=list(rnorm(100,-110000,20000),190000))
-# k <- addnode(k,"unfav2",leaf_nodevalue=list(2000))
-# k <- value(k,"max")
-# treeplot(k,main="Histogram of simulation result",col="red")

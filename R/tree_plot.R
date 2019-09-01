@@ -1,3 +1,37 @@
+#' plot a decision tree
+#'
+#' For a single tree, draw a tree plot; For the simulation, draw a histogram
+#' of the root value
+#'
+#' @param x an object of a decision tree
+#' @param ... parameters in [hist()]
+#'
+#' @author Kevin Hu \email{kevinhu@bu.edu}
+#'
+#' @examples
+#'
+#' k <- tree()
+#' k <- create(k,"a","choice",2,c("treasury","LLC"))
+#' k <- addnode(k,"LLC","chance",2,c("fav1","unfav1"),c(0.3,0.7))
+#' k <- addnode(k,"fav1","chance",2,c("yes","no"),prob=c(0.5,0.5),leaf_nodevalue=list(7000,20000))
+#' k <- addnode(k,"unfav1",leaf_nodevalue=list(190000))
+#' k <- addnode(k,"treasury","chance",2,c("unfav2","fav2"),c(0.75,0.25))
+#' k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=list(-110000,190000))
+#' k <- addnode(k,"unfav2",leaf_nodevalue=list(2000))
+#' k <- value(k,"max")
+#' treeplot(k)
+#'
+#' k <- tree()
+#' k <- create(k,"a","choice",2,c("treasury","LLC"))
+#' k <- addnode(k,"LLC","chance",2,c("fav1","unfav1"),c(0.3,0.7))
+#' k <- addnode(k,"fav1","chance",2,c("yes","no"),prob=c(0.5,0.5),leaf_nodevalue=list(rnorm(10000,7000,100),20000))
+#' k <- addnode(k,"unfav1",leaf_nodevalue=list(190000))
+#' k <- addnode(k,"treasury","chance",2,c("unfav2","fav2"),c(0.75,0.25))
+#' k <- addnode(k,"fav2","chance",2,prob=c(0.75,0.25),leaf_nodevalue=list(rnorm(100,-110000,20000),190000))
+#' k <- addnode(k,"unfav2",leaf_nodevalue=list(2000))
+#' k <- value(k,"max")
+#' treeplot(k,main="Histogram of simulation result",col="red")
+#'
 #' @export treeplot
 treeplot <- function(x,...) UseMethod("treeplot",x)
 
