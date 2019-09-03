@@ -43,30 +43,30 @@
 #' @rdname decision_tree
 #' @export
 tree <- function(x){
-    t <- list(var=NA,type=NA,yval=NA,n=NA,sub_name=list(NA),prob=list(NA),value=list(NA),father_name=NA,leaf_name=list(NA),leafnode_value=list(NA),order=1,nn=1)
+    t <- list(var=NULL,type=NULL,yval=NULL,n=NULL,sub_name=list(),prob=list(),value=list(),father_name=NULL,leaf_name=list(),leafnode_value=list(),order=1,nn=1)
     return(t)
 }
-tree.create <- function(x,name,type,n,sub_name,prob=NA){
+tree.create <- function(x,name,type,n,sub_name,prob=NULL){
     x$var <- name
     x$type <- type
     x$yval <- 1
     x$n <- n
     x$sub_name[[x$order]] <- sub_name
     if (!(type %in% c("choice","chance"))) stop("choose the correct node type")
-    if (type=="chance" & identical(prob,NA)) stop("type the probability of choices")
+    if (type=="chance" & identical(prob,NULL)) stop("type the probability of choices")
     if (type=="chance" & abs(sum(prob)-1)>0.001) stop("check the sum of probability")
     if (type=="chance" & n!=length(prob)) stop("check number of probability")
     if (type=="choice") x$prob[[x$order]] <- NA
     else x$prob[[x$order]] <- prob
-    x$value[[x$order]] <- NA
+    x$value[[x$order]] <- numeric(0)
     x$order <- x$order+1
     return(x)
 }
-tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
-    if (identical(type,NA)){
-        if (identical(x$father_name,NA)) x$father_name <- name
+tree.addnode <- function(x,name,type,n,sub_name=NULL,prob=NULL,leaf_nodevalue=NULL){
+    if (identical(type,NULL)){
+        if (identical(x$father_name,NULL)) x$father_name <- name
         else x$father_name <- append(x$father_name,name)
-        x$leaf_name[[x$nn]] <- sub_name
+        x$leaf_name[[x$nn]] <- ifelse(identical(sub_name,NULL),NA,sub_name)
         x$leafnode_value[[x$nn]] <- leaf_nodevalue
         for (item in x$leafnode_value[[x$nn]]){
             if (length(item)>=2) attr(x,"class") <- c("dist")
@@ -92,16 +92,16 @@ tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
         }
         x$sub_name[[x$order]] <- sub_name
         if (!(type %in% c("choice","chance"))) stop("choose the correct node type")
-        if (type=="chance" & identical(prob,NA)) stop("type the probability of choices")
+        if (type=="chance" & identical(prob,NULL)) stop("type the probability of choices")
         if (type=="chance" & abs(sum(prob)-1)>0.001) stop("check the sum of probability")
         if (type=="chance" & n!=length(prob)) stop("check number of probability")
         if (type=="choice") x$prob[[x$order]] <- NA
         else x$prob[[x$order]] <- prob
-        x$value[[x$order]] <- NA
-        if (!identical(leaf_nodevalue,NA)){
-            if (identical(x$father_name,NA)){
+        x$value[[x$order]] <- numeric(0)
+        if (!identical(leaf_nodevalue,NULL)){
+            if (identical(x$father_name,NULL)){
                 x$father_name <- name
-                x$leaf_name[[x$nn]] <- sub_name
+                x$leaf_name[[x$nn]] <- ifelse(identical(sub_name,NULL),NA,sub_name)
                 x$leafnode_value[[x$nn]] <- leaf_nodevalue
                 for (item in x$leafnode_value[[x$nn]]){
                     if (length(item)>=2) attr(x,"class") <- c("dist")
@@ -110,7 +110,7 @@ tree.addnode <- function(x,name,type,n,sub_name=NA,prob=NA,leaf_nodevalue=NA){
             }
             else{
                 x$father_name <- append(x$father_name,name)
-                x$leaf_name[[x$nn]] <- sub_name
+                x$leaf_name[[x$nn]] <- ifelse(identical(sub_name,NULL),NA,sub_name)
                 x$leafnode_value[[x$nn]] <- leaf_nodevalue
                 for (item in x$leafnode_value[[x$nn]]){
                     if (length(item)>=2) attr(x,"class") <- c("dist")
@@ -182,14 +182,14 @@ tree.eval <- function(x,opti){
 
 #' @rdname decision_tree
 #' @export
-create <- function(x,name,type,n,sub_name,prob=NA){
+create <- function(x,name,type,n,sub_name,prob=NULL){
     x <- tree.create(x,name,type,n,sub_name,prob)
     return(x)
 }
 
 #' @rdname decision_tree
 #' @export
-addnode <- function(x,name,type=NA,n=NA,sub_name=NA,prob=NA,leaf_nodevalue=NA){
+addnode <- function(x,name,type=NULL,n=NULL,sub_name=NULL,prob=NULL,leaf_nodevalue=NULL){
     x <- tree.addnode(x,name,type,n,sub_name,prob,leaf_nodevalue)
     return(x)
 }
