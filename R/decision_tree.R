@@ -66,7 +66,8 @@ tree.addnode <- function(x,name,type,n,sub_name=NULL,prob=NULL,leaf_nodevalue=NU
     if (identical(type,NULL)){
         if (identical(x$father_name,NULL)) x$father_name <- name
         else x$father_name <- append(x$father_name,name)
-        x$leaf_name[[x$nn]] <- ifelse(identical(sub_name,NULL),NA,sub_name)
+        if (identical(sub_name,NULL)) x$leaf_name[[x$nn]] <- NA
+        else x$leaf_name[[x$nn]] <- sub_name
         x$leafnode_value[[x$nn]] <- leaf_nodevalue
         for (item in x$leafnode_value[[x$nn]]){
             if (length(item)>=2) attr(x,"class") <- c("dist")
@@ -101,7 +102,8 @@ tree.addnode <- function(x,name,type,n,sub_name=NULL,prob=NULL,leaf_nodevalue=NU
         if (!identical(leaf_nodevalue,NULL)){
             if (identical(x$father_name,NULL)){
                 x$father_name <- name
-                x$leaf_name[[x$nn]] <- ifelse(identical(sub_name,NULL),NA,sub_name)
+                if (identical(sub_name,NULL)) x$leaf_name[[x$nn]] <- NA
+                else x$leaf_name[[x$nn]] <- sub_name
                 x$leafnode_value[[x$nn]] <- leaf_nodevalue
                 for (item in x$leafnode_value[[x$nn]]){
                     if (length(item)>=2) attr(x,"class") <- c("dist")
@@ -110,7 +112,8 @@ tree.addnode <- function(x,name,type,n,sub_name=NULL,prob=NULL,leaf_nodevalue=NU
             }
             else{
                 x$father_name <- append(x$father_name,name)
-                x$leaf_name[[x$nn]] <- ifelse(identical(sub_name,NULL),NA,sub_name)
+                if (identical(sub_name,NULL)) x$leaf_name[[x$nn]] <- NA
+                else x$leaf_name[[x$nn]] <- sub_name
                 x$leafnode_value[[x$nn]] <- leaf_nodevalue
                 for (item in x$leafnode_value[[x$nn]]){
                     if (length(item)>=2) attr(x,"class") <- c("dist")
