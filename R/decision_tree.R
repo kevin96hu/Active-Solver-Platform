@@ -160,7 +160,7 @@ tree.eval <- function(x,opti){
             num <- which(x$var[i]==x$father_name)
             for (j in 1:length(x$leafnode_value[[num]])) temp <- temp + x$leafnode_value[[num]][[j]]
             for (j in 1:length(x$leafnode_value[[num]])) x$leafnode_value[[num]][[j]] <- x$leafnode_value[[num]][[j]] + temp - temp
-            ma <- t(matrix(unlist(x$leafnode_value[[num]]),ncol=x$n[which(x$var[i]==x$father_name)]))
+            ma <- t(matrix(unlist(x$leafnode_value[[num]]),ncol=length(x$leafnode_value[[num]])))
             if (x$type[i]=="chance") x$value[[i]] <- as.vector(x$prob[[i]] %*% ma)
             else if (opti=="max") x$value[[i]] <- as.vector(apply(ma,2,max))
                  else x$value[[i]] <- as.vector(apply(ma,2,min))
