@@ -74,6 +74,7 @@ treeplot.default <- function(k){
     coor <- list()
     for (i in length(k$var):1) {
         if (k$var[i] %in% k$father_name){
+            coor$y <- vector()
             for (j in 1:length(k$leafnode_value[[which(k$var[i] == k$father_name)]])){
                 lines(c(xlim-35,x_one(xlim,md,k$yval[i])),c(20*len-10,20*len-10))
                 text(xlim-15,20*len-10,k$leafnode_value[[which(k$var[i] == k$father_name)]][j])
