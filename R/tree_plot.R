@@ -75,7 +75,7 @@ treeplot.default <- function(k){
     for (i in length(k$var):1) {
         if (k$var[i] %in% k$father_name){
             for (j in 1:length(k$leafnode_value[[which(k$var[i] == k$father_name)]])){
-                lines(c(xlim-35,xlim-75),c(20*len-10,20*len-10))
+                lines(c(xlim-35,x_one(xlim,md,k$yval[i])),c(20*len-10,20*len-10))
                 text(xlim-15,20*len-10,k$leafnode_value[[which(k$var[i] == k$father_name)]][j])
                 if (!identical(k$leaf_name[[which(k$var[i] == k$father_name)]],NA)){
                     text(xlim-55,20*len-6,k$leaf_name[[which(k$var[i] == k$father_name)]][j])
