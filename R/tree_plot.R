@@ -77,9 +77,9 @@ treeplot.default <- function(k){
             coor$y <- vector()
             for (j in 1:length(k$leafnode_value[[which(k$var[i] == k$father_name)]])){
                 lines(c(xlim-35,x_one(xlim,md,k$yval[i])),c(20*len-10,20*len-10))
-                text(xlim-15,20*len-10,k$leafnode_value[[which(k$var[i] == k$father_name)]][j])
+                text(xlim-15,20*len-10,k$leafnode_value[[which(k$var[i] == k$father_name)]][j],cex=0.5)
                 if (!identical(k$leaf_name[[which(k$var[i] == k$father_name)]],NA)){
-                    text(xlim-55,20*len-6,k$leaf_name[[which(k$var[i] == k$father_name)]][j])
+                    text(xlim-55,20*len-6,k$leaf_name[[which(k$var[i] == k$father_name)]][j],cex=0.5)
                     if (!identical(k$prob[[i]],NA)) text(xlim-55,20*len,k$prob[[i]][j])
                 }
                 else if (!identical(k$prob[[i]],NA)) text(xlim-55,20*len-6,k$prob[[i]][j])
@@ -91,12 +91,12 @@ treeplot.default <- function(k){
             }
             if (k$type[i]=="chance"){
                 plotrix::draw.circle(x_three(xlim,md,k$yval[i]),mean(coor$y),x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[[i]])
+                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[[i]],cex=0.5)
                 coor[[k$var[i]]] <- mean(coor$y)
             }
             else {
                 rect(x_four(xlim,md,k$yval[i]),mean(coor$y)-x_r(md,k$yval[i]),x_two(xlim,md,k$yval[i]),mean(coor$y)+x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[[i]])
+                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[[i]],cex=0.5)
                 coor[[k$var[i]]] <- mean(coor$y)
             }
         }
@@ -113,17 +113,17 @@ treeplot.default <- function(k){
             for (name in k$sub_name[[i]]){
                 if (name %in% k$var){
                     lines(c(x_one(xlim,md,k$yval[i]),x_four(xlim,md,k$yval[i]+1)),c(coor[[name]],coor[[name]]))
-                    text(x_one(xlim,md,k$yval[i])+20,coor[[name]]+4,name)
+                    text(x_one(xlim,md,k$yval[i])+20,coor[[name]]+4,name,cex=0.5)
                     if (!identical(k$prob[[i]],NA)){
-                        text(x_one(xlim,md,k$yval[i])+20,coor[[name]]+10,k$prob[[i]][which(name==k$sub_name[[i]])])
+                        text(x_one(xlim,md,k$yval[i])+20,coor[[name]]+10,k$prob[[i]][which(name==k$sub_name[[i]])],cex=0.5)
                     }
                 }
                 else {
                     lines(c(x_one(xlim,md,k$yval[i]),xlim-35),c(20*len-10,20*len-10))
-                    text(x_one(xlim,md,k$yval[i])+20,20*len-6,name)
-                    text(xlim-15,20*len-10,k$leafnode_value[[which(name == k$father_name)]])
+                    text(x_one(xlim,md,k$yval[i])+20,20*len-6,name,cex=0.5)
+                    text(xlim-15,20*len-10,k$leafnode_value[[which(name == k$father_name)]],cex=0.5)
                     if (!identical(k$prob[[i]],NA)){
-                        text(x_one(xlim,md,k$yval[i])+20,20*len,k$prob[[i]][which(name==k$sub_name[[i]])])
+                        text(x_one(xlim,md,k$yval[i])+20,20*len,k$prob[[i]][which(name==k$sub_name[[i]])],cex=0.5)
                     }
                 }
             }
@@ -139,12 +139,12 @@ treeplot.default <- function(k){
             }
             if (k$type[i]=="chance"){
                 plotrix::draw.circle(x_three(xlim,md,k$yval[i]),coor$y,x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[[i]])
+                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[[i]],cex=0.5)
                 coor[[k$var[i]]] <- coor$y
             }
             else {
                 rect(x_four(xlim,md,k$yval[i]),mean(coor$y)-x_r(md,k$yval[i]),x_two(xlim,md,k$yval[i]),mean(coor$y)+x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[[i]])
+                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[[i]],cex=0.5)
                 coor[[k$var[i]]] <- coor$y
             }
         }
