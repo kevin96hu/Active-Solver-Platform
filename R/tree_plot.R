@@ -80,9 +80,9 @@ treeplot.default <- function(k){
                 text(xlim-15,20*len-10,k$leafnode_value[[which(k$var[i] == k$father_name)]][j],cex=0.5)
                 if (!identical(k$leaf_name[[which(k$var[i] == k$father_name)]],NA)){
                     text(xlim-55,20*len-6,k$leaf_name[[which(k$var[i] == k$father_name)]][j],cex=0.5)
-                    if (!identical(k$prob[[i]],NA)) text(xlim-55,20*len,k$prob[[i]][j])
+                    if (!identical(k$prob[[i]],NA)) text(xlim-55,20*len,k$prob[[i]][j],cex=0.5)
                 }
-                else if (!identical(k$prob[[i]],NA)) text(xlim-55,20*len-6,k$prob[[i]][j])
+                else if (!identical(k$prob[[i]],NA)) text(xlim-55,20*len-6,k$prob[[i]][j],cex=0.5)
                 coor$y[j] <- 20*len-10
                 len <- len-1
             }
@@ -91,12 +91,12 @@ treeplot.default <- function(k){
             }
             if (k$type[i]=="chance"){
                 plotrix::draw.circle(x_three(xlim,md,k$yval[i]),mean(coor$y),x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[[i]],cex=0.5)
+                text(x_three(xlim,md,k$yval[i]),mean(coor$y)-5-md+k$yval[i],k$value[[i]],cex=0.5)
                 coor[[k$var[i]]] <- mean(coor$y)
             }
             else {
                 rect(x_four(xlim,md,k$yval[i]),mean(coor$y)-x_r(md,k$yval[i]),x_two(xlim,md,k$yval[i]),mean(coor$y)+x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),mean(coor$y)+5+md-k$yval[i],k$value[[i]],cex=0.5)
+                text(x_three(xlim,md,k$yval[i]),mean(coor$y)-5-md+k$yval[i],k$value[[i]],cex=0.5)
                 coor[[k$var[i]]] <- mean(coor$y)
             }
         }
@@ -139,12 +139,12 @@ treeplot.default <- function(k){
             }
             if (k$type[i]=="chance"){
                 plotrix::draw.circle(x_three(xlim,md,k$yval[i]),coor$y,x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[[i]],cex=0.5)
+                text(x_three(xlim,md,k$yval[i]),coor$y-5-md+k$yval[i],k$value[[i]],cex=0.5)
                 coor[[k$var[i]]] <- coor$y
             }
             else {
                 rect(x_four(xlim,md,k$yval[i]),mean(coor$y)-x_r(md,k$yval[i]),x_two(xlim,md,k$yval[i]),mean(coor$y)+x_r(md,k$yval[i]))
-                text(x_three(xlim,md,k$yval[i]),coor$y+5+md-k$yval[i],k$value[[i]],cex=0.5)
+                text(x_three(xlim,md,k$yval[i]),coor$y-5-md+k$yval[i],k$value[[i]],cex=0.5)
                 coor[[k$var[i]]] <- coor$y
             }
         }
